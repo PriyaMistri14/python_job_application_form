@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update</title>
+</head>
+<body>
+
+
+
+
+
+
+<div align="center">
+    <br>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <br><hr>
+        <br>
+
+        <div name="acade_container">
+
+        {{form_acade.as_p}}
+
+            </div>
+        <div id="academic_id"></div>
+<!--        <div id="experiencesContainer"></div>-->
+
+        <p onclick="add_acade()" align="center">+</p>
+        <p onclick="remove_acade()" align="center">-</p>
+
+        <br><hr>
+        <br>
+
+        {{form_exper.as_p}}
+        <div id="experience_id"></div>
+        <p onclick="add_exper()" align="center">+</p>
+        <p onclick="remove_exper()" align="center">-</p>
+
+
+
+
+
+
+
+        <br><hr>
+        <br>
+
+<!--        {{form_langu.as_p}}-->
+
+
+        {% for i in data %}
+    <div class="row" style="display:flex;justify-content:center">
+        <span>{{ i }}:  </span>
+        {% if i == lang_selected %}
+        <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change(`{{ i }}`)" checked></span>
+
+        {% endif %}
+ {% if i != lang_selected %}
+        <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change(`{{ i }}`)" ></span>
+{% endif %}
+
+
+
+
+        <div style="display:flex;flex-direction:row;justify-content:center">
+            {% for f in lang_rws %}
+            {% if readed == True and f == 'read' and i == lang_selected%}
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked disabled>
+
+            {% endif %}
+             {% if writed == True and f == 'write' and i == lang_selected%}
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked disabled>
+
+            {% endif %}
+             {% if speaked == True and f == 'speak' and i == lang_selected%}
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked disabled>
+
+            {% endif %}
+
+
+
+
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} disabled>
+            {% endfor %}
+
+<!--            {{form_langu.as_p}}-->
+
+        </div>
+    </div>
+{% endfor %}
+
+<!--        ........              -->
+
+         <br><hr>
+        <br>
+         {% for i in tech %}
+    <div class="row" style="display:flex;justify-content:center">
+        <span>{{ i }}:  </span>
+        {% if i == tech_selected %}
+        <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change_tech(`{{ i }}`)" checked></span>
+
+        {% endif %}
+        {% if i != tech_selected %}
+        <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change_tech(`{{ i }}`)"></span>
+{% endif %}
+        {% if rating == 3 and i == tech_selected %}
+
+        Begginer <input type="radio" name={{ i }}radio value="begginer" disabled checked>
+        Mediator <input type="radio" name={{ i }}radio value="mediator" disabled>
+        Expert <input type="radio" name={{ i }}radio value="expert" disabled>
+{% endif %}
+
+                {% if rating == 6 and i == tech_selected %}
+
+        Begginer <input type="radio" name={{ i }}radio value="begginer" disabled >
+        Mediator <input type="radio" name={{ i }}radio value="mediator" disabled checked>
+        Expert <input type="radio" name={{ i }}radio value="expert" disabled>
+{% endif %}
+
+                {% if rating == 10 and i == tech_selected %}
+
+        Begginer <input type="radio" name={{ i }}radio value="begginer" disabled >
+        Mediator <input type="radio" name={{ i }}radio value="mediator" disabled>
+        Expert <input type="radio" name={{ i }}radio value="expert" disabled checked>
+{% endif %}
+
+
+        {% if i != tech_selected%}
+
+          Begginer <input type="radio" name={{ i }}radio value="begginer" disabled >
+        Mediator <input type="radio" name={{ i }}radio value="mediator" disabled>
+        Expert <input type="radio" name={{ i }}radio value="expert" disabled >
+{% endif %}
+
+
+<!--            {{ form_techn }}-->
+<!--            {% for field in form_techn %}-->
+<!--            <p>{{field}}</p>-->
+<!--            {% endfor %}-->
+
+<!--            {{form_langu.as_p}}-->
+
+
+    </div>
+{% endfor %}
+
+
+
+
+<!--        .........              -->
+
+
+
+         <br><hr>
+        <br>
+
+        {{form_refer.as_p}}
+        <div id="reference_id"></div>
+        <p onclick="add_refer()" align="center">+</p>
+        <p onclick="remove_refer()" align="center">-</p>
+
+
+
+
+
+        <br><hr>
+        <br>
+
+        {{form_prefe.as_p}}
+
+
+<br>
+        <input type="submit" value="SUBMIT">
+
+    </form>
+
+</div>
+</body>
+<script>
+    function add_acade(){
+    var abc = document.getElementById("academic_id")
+    var ele = document.createElement("div")
+    ele.innerHTML= `{{ form_acade.as_p }}`
+    abc.appendChild(ele)
+
+    }
+
+   function add_exper(){
+    var abc = document.getElementById("experience_id")
+     var ele = document.createElement("div")
+    ele.innerHTML= `{{ form_exper.as_p }}`
+    abc.appendChild(ele)
+    }
+
+function add_refer(){
+    var abc = document.getElementById("reference_id")
+    var ele = document.createElement("div")
+    ele.innerHTML= `{{ form_refer.as_p }}`
+    abc.appendChild(ele)
+
+    }
+
+
+
+    function remove_acade(){
+    var select = document.getElementById('academic_id');
+    select.removeChild(select.lastChild);
+    }
+
+    function remove_exper(){
+    var select = document.getElementById('experience_id');
+    select.removeChild(select.lastChild);
+    }
+
+
+
+
+    function remove_refer(){
+    var select = document.getElementById('reference_id');
+    select.removeChild(select.lastChild);
+    }
+
+
+
+   function change(lang_name){
+   var language_name = document.getElementsByName(lang_name);
+   if(language_name[0].checked){
+<!--   alert("condition is true")-->
+   var name_read = lang_name+"read"
+   var name_write = lang_name+"write"
+   var name_speak = lang_name+"speak"
+
+
+
+
+<!--   alert(name)-->
+
+   var read = document.getElementsByName(name_read)
+   read[0].disabled = false
+   var write = document.getElementsByName(name_write)
+   write[0].disabled = false
+   var speak = document.getElementsByName(name_speak)
+   speak[0].disabled = false
+
+
+
+<!--   for(i=0; i<rws.length ; i++){-->
+<!--   rws[i].disabled = false-->
+<!--   }-->
+<!--   alert(rws[0].disabled)-->
+   }
+
+   else{
+   var name = lang_name+"rws"
+   var rws = document.getElementsByName(name)
+   for(i=0; i<rws.length ; i++){
+   rws[i].disabled = true
+   }
+
+
+   }
+
+
+<!--   alert(language_name[0].checked)-->
+   }
+
+
+
+
+ function change_tech(tech_name){
+   var technology_name = document.getElementsByName(tech_name);
+   if(technology_name[0].checked){
+<!--   alert("condition is true")-->
+   var name = tech_name+"radio"
+<!--   alert(name)-->
+
+   var rws = document.getElementsByName(name)
+   for(i=0; i<rws.length ; i++){
+   rws[i].disabled = false
+   }
+<!--   alert(rws[0].disabled)-->
+   }
+
+   else{
+   var name = tech_name+"radio"
+   var rws = document.getElementsByName(name)
+   for(i=0; i<rws.length ; i++){
+   rws[i].disabled = true
+   }
+
+
+   }
+
+
+<!--   alert(language_name[0].checked)-->
+   }
+
+
+
+</script>
+
+</html>
