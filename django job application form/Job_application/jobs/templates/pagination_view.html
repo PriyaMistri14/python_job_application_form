@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagination</title>
+</head>
+<body>
+
+
+
+<table border="1px" align="center">
+    <tr><td>FIRST NAME</td>
+        <td>LAST NAME</td>
+        <td>SURNAME</td>
+        <td>CONTACT NO</td>
+        <td>CITY</td>
+        <td>STATE</td>
+        <td>EMAIL</td>
+        <td>GENDER</td>
+        <td>DOB</td>
+
+    </tr>
+
+{% for cand in obj_page.object_list  %}
+
+  <tr><td>{{ cand.fname }}</td>
+  <td>{{ cand.lname }}</td>
+      <td>{{ cand.surname }}</td>
+      <td>{{ cand.contact_no }}</td>
+      <td>{{ cand.city }}</td>
+      <td>{{ cand.state }}</td>
+      <td>{{ cand.email }}</td>
+      <td>{{ cand.gender }}</td>
+      <td>{{ cand.dob }}</td>
+      <td><a href = "/job/delete/{{ cand.id }}/">Delete</a></td>
+      <td><a href = "/job/update/{{ cand.id }}/">Update</a></td>
+
+
+  </tr>
+
+{% endfor %}
+
+
+
+</table>
+
+<br>
+<br>
+<div align="center">
+{% for page in no_of_pages %}
+<a href="?page={{ page }}">{{ page }}</a>
+{% endfor %}
+</div>
+
+
+<br>
+{% if obj_page.has_previous %}
+<div align="center">
+<a href="?page={{ obj_page.previous_page_number }}">Previous</a></div>
+{% endif %}
+
+{% if obj_page.has_next %}
+<div align="center">
+<a href="?page={{ obj_page.next_page_number }}">Next</a></div>
+{% endif %}
+
+
+
+
+
+
+
+</body>
+</html>

@@ -46,6 +46,7 @@ class ExperienceMasterForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        print("cleaned data::::", cleaned_data)
         from_date = cleaned_data.get("from_date")
         to_date = cleaned_data.get("to_date")
         print(f'from_date:{from_date} \n to_date: {to_date}')
@@ -70,6 +71,9 @@ class ExperienceMasterForm(forms.ModelForm):
 
 # LANGUAGE_CHOICES = [('Hindi','Hindi'),('English','English'),('Gujrati', 'Gujrati')]
 class LanguageKnownMasterForm(forms.ModelForm):
+
+
+
     class Meta:
         model = LanguageKnownMaster
         # language = forms.CharField(label='language', widget=forms.RadioSelect(choices=LANGUAGE_CHOICES))

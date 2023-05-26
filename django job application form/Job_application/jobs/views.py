@@ -1,4 +1,10 @@
+# from django.core.serializers import json
+import json
+
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
+
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -11,9 +17,10 @@ from .forms import CandidateMasterForm, AcademicMasterForm, ExperienceMasterForm
 
 def create_view(request):
     if request.user.is_superuser:
+
         context = {}
         form = CandidateMasterForm(request.POST or None)
-        form_acade= AcademicMasterForm(request.POST or None)
+        # form_acade= AcademicMasterForm(request.POST or None)
         form_exper = ExperienceMasterForm(request.POST or None)
         form_langu = LanguageKnownMasterForm(request.POST or None)
         form_refer = ReferenceMasterForm(request.POST or None)
@@ -22,14 +29,6 @@ def create_view(request):
         form_techn_model = TechnologyKnownMasterModelForm(request.POST or None)
 
         # print("check box btn value for php :::", request.POST['PHP'])
-
-
-
-
-
-
-
-
         # if request.POST['PHP'] == 'PHP':
         #     php = request.POST['PHPradio']
         # if request.POST['Laravel'] == 'Laravel':
@@ -38,23 +37,14 @@ def create_view(request):
         #     mysql = request.POST['Mysql']
         # if request.POST['Oracle'] == 'Oracle':
         #     oracle = request.POST['Oracle']
-
-
-
-
-
-
-
         # print("radio btn value for php :::", php)
 
 
 
-
-
-
-
-        if form.is_valid() and form_acade.is_valid() and form_exper.is_valid()  and form_refer.is_valid() and form_prefe.is_valid():
+        if form.is_valid() and form_exper.is_valid()  and form_refer.is_valid() and form_prefe.is_valid():
             intance= form.save(commit=True)
+
+            print("///////////",request.POST.getlist("refe_name"),request.POST.getlist("company_name"), request.POST.getlist("passing_year"), request.POST.getlist("name_of_board_university"),request.POST.getlist("course_name"), request.POST.getlist("percentage"))
 
             print("intance.....", intance)
 
@@ -68,187 +58,149 @@ def create_view(request):
             intance.save()
             # print("........................INSTANT ID:::", intance.id, intance.user)
 
-            profile = form_acade.save(commit=False)
-            profile.candidate = intance
-            profile.save()
+            # profile = form_acade.save(commit=False)
+            print("form_exper", form_refer)
+            #
+            #
+            # profile.candidate = intance
+            # profile.save()
 
-            profile = form_exper.save(commit=False)
-            profile.candidate = intance
-            profile.save()
+            for i in range(len(request.POST.getlist("course_name"))):
+                AcademicMaster.objects.create(candidate=intance, name_of_board_university=request.POST.getlist("name_of_board_university")[i],
+                                              passing_year=request.POST.getlist("passing_year")[i],
+                                                   course_name=request.POST.getlist("course_name")[i],
+                                                   percentage=request.POST.getlist("percentage")[i]).save()
+
+
+
+
+
+
+
+
+
+            # profile = form_exper.save(commit=False)
+            # profile.candidate = intance
+            # profile.save()
+
+
+            for i in range(len(request.POST.getlist("company_name"))):
+                ExperienceMaster.objects.create(candidate=intance, company_name=request.POST.getlist("company_name")[i],
+                                              designation=request.POST.getlist("designation")[i],
+                                                   from_date=request.POST.getlist("from_date")[i],
+                                                   to_date=request.POST.getlist("to_date")[i]).save()
+
+
+
 
             # ........
 
-            profile = form_langu.save(commit=False)
-            profile.candidate = intance
+            # profile = form_langu.save(commit=False)
+            # profile.candidate = intance
+
 
             if "Hindi" in request.POST:
-                if "Hindiread" in request.POST:
-                    profile.language = "Hindi"
-                    profile.read = True
-                    profile.write = False
-                    profile.speak = False
-
-                if "Hindiwrite" in request.POST:
-                    profile.language = "Hindi"
-                    profile.write = True
-                    profile.read = False
-                    profile.speak = False
-
-                if "Hindispeak" in request.POST:
-                    profile.language = "Hindi"
-                    profile.speak = True
-                    profile.write = False
-                    profile.read = False
-
-
+                lang_name= "Hindi"
+                lang_read = True if "Hindiread" in request.POST else False
+                lang_write = True if "Hindiwrite" in request.POST else False
+                lang_speak = True if "Hindispeak" in request.POST else False
+                LanguageKnownMaster.objects.create(candidate=intance, language=lang_name, read=lang_read, write=lang_write,
+                                               speak=lang_speak).save()
 
             if "Gujrati" in request.POST:
-                if "Gujratiread" in request.POST:
-                    profile.language = "Gujrati"
-                    profile.read = True
-                    profile.write = False
-                    profile.speak = False
-
-                if "Gujratiwrite" in request.POST:
-                    profile.language = "Gujrati"
-                    profile.write = True
-                    profile.read = False
-                    profile.speak = False
-
-                if "Gujratispeak" in request.POST:
-                    profile.language = "Gujrati"
-                    profile.speak = True
-                    profile.write = False
-                    profile.read = False
+                lang_name = "Gujrati"
+                lang_read = True if "Gujratiread" in request.POST else False
+                lang_write = True if "Gujratiwrite" in request.POST else False
+                lang_speak = True if "Gujratispeak" in request.POST else False
+                LanguageKnownMaster.objects.create(candidate=intance, language=lang_name, read=lang_read,
+                                                   write=lang_write,
+                                                   speak=lang_speak).save()
 
             if "English" in request.POST:
-                if "Englishread" in request.POST:
-                    profile.language = "English"
-                    profile.read = True
-                    profile.write = False
-                    profile.speak = False
-
-                if "Englishwrite" in request.POST:
-                    profile.language = "English"
-                    profile.write = True
-                    profile.read = False
-                    profile.speak = False
-
-                if "Englishspeak" in request.POST:
-                    profile.language = "English"
-                    profile.speak = True
-                    profile.write = False
-                    profile.read = False
+                lang_name = "English"
+                lang_read = True if "Englishread" in request.POST else False
+                lang_write = True if "Englishwrite" in request.POST else False
+                lang_speak = True if "Englishspeak" in request.POST else False
+                LanguageKnownMaster.objects.create(candidate=intance, language=lang_name, read=lang_read,
+                                                   write=lang_write,
+                                                   speak=lang_speak).save()
 
 
 
-
-            # profile.language= 'Hindi'
-
-            # print(";;;;;;;;;form data::::::::", form_langu.cleaned_data)
-            profile.save()
-
-
-
-            # ...........
-
-            profile = form_techn_model.save(commit=False)
-            profile.candidate = intance
 
             if 'PHP' in request.POST:
+                tech_name="PHP"
+                tech_rating=0
                 php = request.POST['PHPradio']
                 if php == "begginer":
-                    profile.technology='PHP'
-                    profile.ranting=3
-
+                    tech_rating=3
                 elif php == "mediator":
-                    profile.technology = 'PHP'
-                    profile.ranting = 6
-
+                    tech_rating = 6
                 elif php == "expert":
-                    profile.technology = 'PHP'
-                    profile.ranting = 10
+                    tech_rating = 10
 
-                else:
-                    profile.technology = 'PHP'
-                    profile.ranting = 3
-
-
+                TechnologyKnownMaster.objects.create(candidate=intance, technology=tech_name, ranting=tech_rating).save()
 
 
             if 'Laravel' in request.POST:
-                laravel = request.POST['Laravelradio']
-                if laravel == "begginer":
-                    profile.technology = 'Laravel'
-                    profile.ranting = 3
+                tech_name="Laravel"
+                tech_rating=0
+                Laravel = request.POST['Laravelradio']
+                if Laravel == "begginer":
+                    tech_rating=3
+                elif Laravel == "mediator":
+                    tech_rating = 6
+                elif Laravel == "expert":
+                    tech_rating = 10
 
-                elif laravel == "mediator":
-                    profile.technology = 'Laravel'
-                    profile.ranting = 6
-
-                elif laravel == "expert":
-                    profile.technology = 'Laravel'
-                    profile.ranting = 10
-
-                else:
-                    profile.technology = 'Laravel'
-                    profile.ranting = 3
-
-
+                TechnologyKnownMaster.objects.create(candidate=intance, technology=tech_name, ranting=tech_rating).save()
 
             if 'Mysql' in request.POST:
-                mysql = request.POST['Mysql']
-                if mysql == "begginer":
-                    profile.technology = 'Mysql'
-                    profile.ranting = 3
+                tech_name="Mysql"
+                tech_rating=0
+                Mysql = request.POST['Mysqlradio']
+                if Mysql == "begginer":
+                    tech_rating=3
+                elif Mysql == "mediator":
+                    tech_rating = 6
+                elif Mysql == "expert":
+                    tech_rating = 10
 
-                elif mysql == "mediator":
-                    profile.technology = 'Mysql'
-                    profile.ranting = 6
-
-                elif mysql == "expert":
-                    profile.technology = 'Mysql'
-                    profile.ranting = 10
-
-                else:
-                    profile.technology = 'Mysql'
-                    profile.ranting = 3
-
+                TechnologyKnownMaster.objects.create(candidate=intance, technology=tech_name, ranting=tech_rating).save()
 
 
             if 'Oracle' in request.POST:
-                oracle = request.POST['Oracle']
-                if oracle == "begginer":
-                    profile.technology = 'Oracle'
-                    profile.ranting = 3
+                tech_name="Oracle"
+                tech_rating=0
+                Oracle = request.POST['Oracleradio']
+                if Oracle == "begginer":
+                    tech_rating=3
+                elif Oracle == "mediator":
+                    tech_rating = 6
+                elif Oracle == "expert":
+                    tech_rating = 10
 
-                elif oracle == "mediator":
-                    profile.technology = 'Oracle'
-                    profile.ranting = 6
-
-                elif oracle == "expert":
-                    profile.technology = 'Oracle'
-                    profile.ranting = 10
-
-                else:
-                    profile.technology = 'Oracle'
-                    profile.ranting = 3
+                TechnologyKnownMaster.objects.create(candidate=intance, technology=tech_name, ranting=tech_rating).save()
 
 
 
-
-
-            # profile.ranting = '10'
-            # profile.technology='PHP'
-            # print(";;;;;;;;;form data::::::::", form_techn.cleaned_data)
-            # profile.ranting = form_techn.cleaned_data['rating']
-            profile.save()
 
             # .........
 
-            profile = form_refer.save(commit=False)
-            profile.candidate = intance
-            profile.save()
+            # profile = form_refer.save(commit=False)
+            # profile.candidate = intance
+            # profile.save()
+
+            for i in range(len(request.POST.getlist("refe_name"))):
+                ReferenceMaster.objects.create(candidate=intance, refe_name=request.POST.getlist("refe_name")[i],
+                                                refe_contact_no=request.POST.getlist("refe_contact_no")[i],
+                                                refe_relation=request.POST.getlist("refe_relation")[i]).save()
+
+
+
+
+
+
 
             # ........
             profile = form_prefe.save(commit=False)
@@ -260,7 +212,7 @@ def create_view(request):
 
 
         context["form"] = form
-        context["form_acade"] = form_acade
+        # context["form_acade"] = form_acade
         context["form_exper"] = form_exper
         context["form_langu"] = form_langu
         context["form_techn"] = form_techn
@@ -277,17 +229,98 @@ def create_view(request):
 
 #     ..............................List view...................................
 
+
+
+
+
+
+
+
 def list_view(request):
     context={}
-    context["cand"] = CandidateMaster.objects.all()
-    context["acad"] = AcademicMaster.objects.all()
-    context["expe"] = ExperienceMaster.objects.all()
-    context["lang"] = LanguageKnownMaster.objects.all()
-    context["tech"] = TechnologyKnownMaster.objects.all()
-    context["refe"] = ReferenceMaster.objects.all()
-    context["pref"] = PreferenceMaster.objects.all()
+    if request.GET:
+        if "search" in request.GET:
+            search = request.GET.get("search")
+            print("search value///////", search)
+            obj_cand = CandidateMaster.objects.filter(Q(fname__icontains=search) | Q(lname__icontains=search) |
+                                                  Q(surname__icontains=search) | Q(contact_no__icontains=search) |
+                                                  Q(city__icontains=search) | Q(state__icontains=search) |
+                                                  Q(email__icontains=search) | Q(gender__icontains=search) |
+                                                  Q(dob__icontains=search))
+            context["cand"] = obj_cand
+            context["sort"] = "ASC"
+
+        elif "field" in request.GET:
+            field=request.GET.get("field")
+            sort = request.GET.get("sort")
+            print("search value///////", field)
+            if sort == "ASC":
+                obj_cand = CandidateMaster.objects.all().order_by(field).values()
+                context["cand"] = obj_cand
+                context["sort"] = "DESC"
+
+            else:
+                obj_cand = CandidateMaster.objects.all().order_by("-"+field).values()
+                context["cand"] = obj_cand
+                context["sort"] = "ASC"
+
+
+
+
+    else:
+        context["cand"] = CandidateMaster.objects.all()
+        context["sort"] = "ASC"
+    # context["acad"] = AcademicMaster.objects.all()
+    # context["expe"] = ExperienceMaster.objects.all()
+    # context["lang"] = LanguageKnownMaster.objects.all()
+    # context["tech"] = TechnologyKnownMaster.objects.all()
+    # context["refe"] = ReferenceMaster.objects.all()
+    # context["pref"] = PreferenceMaster.objects.all()
 
     return render(request,"list_view.html", context)
+
+
+
+
+
+
+
+# .................................pagination view.........................
+def pagination_view(request):
+    context={}
+    obj_cand= CandidateMaster.objects.all()
+    p = Paginator(obj_cand,5)
+    page_no = request.GET.get("page")
+    no_of_pages= p.num_pages
+    lst = list(range(1,no_of_pages+1))
+    print("no of pages??????", no_of_pages,lst)
+    try:
+        obj_page = p.get_page(page_no)
+    except:
+        obj_page = p.page(1)
+
+    context["obj_page"] = obj_page
+    context["no_of_pages"] =lst
+    return render(request,"pagination_view.html", context)
+
+
+# ......................................search view......................
+
+# def search_view(request):
+#     context = {}
+#     search = request.GET.get("search")
+#     print("search value///////", search)
+#     obj_cand=CandidateMaster.objects.filter(Q(fname__icontains=search) | Q(lname__icontains=search) |
+#                                             Q(surname__icontains=search) | Q(contact_no__icontains=search) |
+#                                             Q(city__icontains=search) | Q(state__icontains=search) |
+#                                             Q(email__icontains=search) | Q(gender__icontains=search)  |
+#                                             Q(dob__icontains=search))
+#     context["cand"]=obj_cand
+#     return render(request, "list_view.html", context)
+
+
+
+
 
 
 
@@ -315,191 +348,293 @@ def delete_view(request, id):
 def update_view(request,id):
     context={}
     obj_cand = CandidateMaster.objects.filter(id=id).first()
-    obj_acad = AcademicMaster.objects.filter(candidate=obj_cand).first()
-    obj_expe = ExperienceMaster.objects.filter(candidate=obj_cand).first()
-    obj_lang = LanguageKnownMaster.objects.filter(candidate=obj_cand).first()
-    obj_tech = TechnologyKnownMaster.objects.filter(candidate=obj_cand).first()
-    obj_refe = ReferenceMaster.objects.filter(candidate=obj_cand).first()
+    print("object:::::", obj_cand)
+
+    obj_acad_first = AcademicMaster.objects.filter(candidate=obj_cand).first()
+    print("object acade first:::::", obj_acad_first)
+    obj_acad_all = AcademicMaster.objects.filter(candidate=obj_cand)
+    print("object acade all :::::", obj_acad_all)
+    obj_acad = obj_acad_all[1:]
+    print("object acade all :::::", obj_acad)
+
+
+    obj_expe_first = ExperienceMaster.objects.filter(candidate=obj_cand).first()
+    print("object fisrt:::::", obj_expe_first)
+    obj_expe_all = ExperienceMaster.objects.filter(candidate=obj_cand)
+    print("object all:::::", obj_expe_all)
+    obj_expe= obj_expe_all[1:]
+    print("object remaining all :::::", obj_expe)
+
+
+    obj_lang = LanguageKnownMaster.objects.filter(candidate=obj_cand)
+    print("object:::::", obj_lang)
+    obj_tech = TechnologyKnownMaster.objects.filter(candidate=obj_cand)
+    print("object:::::", obj_tech)
+
+    obj_refe_first = ReferenceMaster.objects.filter(candidate=obj_cand).first()
+    print("object fisrt:::::", obj_refe_first)
+    obj_refe_all = ReferenceMaster.objects.filter(candidate=obj_cand)
+    print("object all:::::", obj_refe_all)
+    obj_refe = obj_refe_all[1:]
+    print("object remaining all :::::", obj_refe)
+
+
     obj_pref = PreferenceMaster.objects.filter(candidate=obj_cand).first()
 
 
-    print("updated value language object.....", obj_lang.language,obj_lang.read,obj_lang.write, obj_lang.speak)
-    print("updated value  technology object.....", obj_tech.technology,  obj_tech.ranting)
+    print("object:::::", obj_pref)
+
+
+    print("whole object:::",LanguageKnownMaster.objects.all().filter(candidate=obj_cand))
+    # print("updated value language object.....", obj_lang.language,obj_lang.read,obj_lang.write, obj_lang.speak)
+    # print("updated value  technology object.....", obj_tech.technology,  obj_tech.ranting)
 
 
 
 
     form = CandidateMasterForm(request.POST or None, instance=obj_cand)
-    form_acade = AcademicMasterForm(request.POST or None, instance=obj_acad)
-    form_exper = ExperienceMasterForm(request.POST or None, instance=obj_expe)
-    form_langu = LanguageKnownMasterForm(request.POST or None, instance=obj_lang)
-    form_techn = TechnologyKnownMasterModelForm(request.POST or None, instance=obj_tech)
-    form_refer = ReferenceMasterForm(request.POST or None, instance=obj_refe)
+    form_acade = AcademicMasterForm(request.POST or None)
+    form_exper = ExperienceMasterForm(request.POST or None)
+    form_langu = LanguageKnownMasterForm(request.POST or None)
+    form_techn = TechnologyKnownMasterModelForm(request.POST or None)
+    form_refer = ReferenceMasterForm(request.POST or None)
     form_prefe = PreferenceMasterForm(request.POST or None, instance=obj_pref)
 
     if form.is_valid() and form_acade.is_valid() and form_exper.is_valid() and form_refer.is_valid() and form_prefe.is_valid():
         form.save()
-        form_acade.save()
-        form_exper.save()
+        # form_acade.save()
+        # form_exper.save()
         # form_langu.save()
         # form_techn.save()
-        form_refer.save()
+        # form_refer.save()
         form_prefe.save()
 
-        profile = form_langu.save(commit=False)
+
+        obj_acad = AcademicMaster.objects.filter(candidate=obj_cand).first()
+        obj_acad.candidate = obj_cand
+        obj_acad.course_name = request.POST.getlist("course_name")[0]
+        obj_acad.name_of_board_university = request.POST.getlist("name_of_board_university")[0]
+        obj_acad.passing_year = request.POST.getlist("passing_year")[0]
+        obj_acad.percentage = request.POST.getlist("percentage")[0]
+        obj_acad.save()
+
+
+        len_of_already = len(AcademicMaster.objects.filter(candidate=obj_cand))
+        len_of_getting =len(request.POST.getlist("course_name"))
+
+        if len_of_already == len_of_getting:
+            print(" first condition is true here.......................")
+            for i in range(len_of_already):
+                obj=AcademicMaster.objects.filter(candidate=obj_cand)
+                course_name=obj[i].course_name
+
+                print("///////",i, course_name)
+
+                obj_acad = AcademicMaster.objects.filter(candidate=obj_cand,course_name=course_name)
+                print("///////", obj_acad)
+                # obj_acad.candidate = obj_cand
+                obj_acad[0].course_name = request.POST.getlist("course_name")[i]
+                obj_acad[0].name_of_board_university = request.POST.getlist("name_of_board_university")[i]
+                obj_acad[0].passing_year = request.POST.getlist("passing_year")[i]
+                obj_acad[0].percentage = request.POST.getlist("percentage")[i]
+                obj_acad[0].save()
+
+        elif len_of_already > len_of_getting:
+            print("second condition is true here.......................")
+            for i in range(len_of_getting):
+                obj_acad = AcademicMaster.objects.filter(candidate=obj_cand).first()
+                # obj_acad.candidate = obj_cand
+                obj_acad.course_name = request.POST.getlist("course_name")[i]
+                obj_acad.name_of_board_university = request.POST.getlist("name_of_board_university")[i]
+                obj_acad.passing_year = request.POST.getlist("passing_year")[i]
+                obj_acad.percentage = request.POST.getlist("percentage")[i]
+                obj_acad.save()
+
+            for i in range(len_of_already-len_of_getting):
+                obj_acad = AcademicMaster.objects.filter(candidate=obj_cand).first()
+                obj_acad.delete()
+
+        elif len_of_already < len_of_getting:
+            print(" third condition is true here.......................")
+            for i in range(len_of_already):
+                obj_acad = AcademicMaster.objects.filter(candidate=obj_cand).first()
+                # obj_acad.candidate = obj_cand
+                obj_acad.course_name = request.POST.getlist("course_name")[i]
+                obj_acad.name_of_board_university = request.POST.getlist("name_of_board_university")[i]
+                obj_acad.passing_year = request.POST.getlist("passing_year")[i]
+                obj_acad.percentage = request.POST.getlist("percentage")[i]
+                obj_acad.save()
+
+            print("///////////////////////////////////////////",len_of_already,len_of_getting-len_of_already)
+
+            for i in range(len_of_already,len_of_getting-len_of_already + 1):
+                print("third inside condition is true here.......................",i,request.POST.getlist("passing_year")[i])
+                AcademicMaster.objects.create(candidate=obj_cand,
+                                              name_of_board_university=request.POST.getlist("name_of_board_university")[i],
+                                              passing_year=request.POST.getlist("passing_year")[i],
+                                              course_name=request.POST.getlist("course_name")[i],
+                                              percentage=request.POST.getlist("percentage")[i]).save()
+
+
+
+
+
+        # for i in range(len(request.POST.getlist("course_name"))):
+        #     obj_acad = AcademicMaster.objects.filter(candidate=obj_cand).first()
+        #     obj_acad.candidate = obj_cand
+        #     obj_acad.course_name = request.POST.getlist("course_name")[i]
+        #     obj_acad.name_of_board_university= request.POST.getlist("name_of_board_university")[i]
+        #     obj_acad.passing_year= request.POST.getlist("passing_year")[i]
+        #     obj_acad.percentage = request.POST.getlist("percentage")[i]
+        #     obj_acad.save()
+
+        for i in range(len(request.POST.getlist("company_name"))):
+            obj_expe = ExperienceMaster.objects.filter(candidate=obj_cand).first()
+            obj_expe.candidate = obj_cand
+            obj_expe.company_name = request.POST.getlist("company_name")[i]
+            obj_expe.designation = request.POST.getlist("designation")[i]
+            obj_expe.from_date = request.POST.getlist("from_date")[i]
+            obj_expe.to_date = request.POST.getlist("to_date")[i]
+            obj_expe.save()
 
 
         if "Hindi" in request.POST:
-            if "Hindiread" in request.POST:
-                profile.language = "Hindi"
-                profile.read = True
-                profile.write = False
-                profile.speak = False
+            lang_name = "Hindi"
+            lang_read = True if "Hindiread" in request.POST else False
+            lang_write = True if "Hindiwrite" in request.POST else False
+            lang_speak = True if "Hindispeak" in request.POST else False
+            obj_lang = LanguageKnownMaster.objects.filter(candidate=obj_cand).first()
+            obj_lang.candidate = obj_cand
+            obj_lang.language = lang_name
+            obj_lang.read = lang_read
+            obj_lang.write =lang_write
+            obj_lang.speak = lang_speak
+            obj_lang.save()
 
-            if "Hindiwrite" in request.POST:
-                profile.language = "Hindi"
-                profile.write = True
-                profile.read = False
-                profile.speak = False
 
-            if "Hindispeak" in request.POST:
-                profile.language = "Hindi"
-                profile.speak = True
-                profile.write = False
-                profile.read = False
+
+
 
         if "Gujrati" in request.POST:
-            if "Gujratiread" in request.POST:
-                profile.language = "Gujrati"
-                profile.read = True
-                profile.write = False
-                profile.speak = False
+            lang_name = "Gujrati"
+            lang_read = True if "Gujratiread" in request.POST else False
+            lang_write = True if "Gujratiwrite" in request.POST else False
+            lang_speak = True if "Gujratispeak" in request.POST else False
+            obj_lang = LanguageKnownMaster.objects.filter(candidate=obj_cand).first()
+            obj_lang.candidate = obj_cand
+            obj_lang.language = lang_name
+            obj_lang.read = lang_read
+            obj_lang.write = lang_write
+            obj_lang.speak = lang_speak
+            obj_lang.save()
 
-            if "Gujratiwrite" in request.POST:
-                profile.language = "Gujrati"
-                profile.write = True
-                profile.read = False
-                profile.speak = False
-
-            if "Gujratispeak" in request.POST:
-                profile.language = "Gujrati"
-                profile.speak = True
-                profile.write = False
-                profile.read = False
 
         if "English" in request.POST:
-            if "Englishread" in request.POST:
-                profile.language = "English"
-                profile.read = True
-                profile.write = False
-                profile.speak = False
-
-            if "Englishwrite" in request.POST:
-                profile.language = "English"
-                profile.write = True
-                profile.read = False
-                profile.speak = False
-
-            if "Englishspeak" in request.POST:
-                profile.language = "English"
-                profile.speak = True
-                profile.write = False
-                profile.read = False
-
-        profile.save()
-
-        profile = form_techn.save(commit=False)
-
+            lang_name = "English"
+            lang_read = True if "Englishread" in request.POST else False
+            lang_write = True if "Englishwrite" in request.POST else False
+            lang_speak = True if "Englishspeak" in request.POST else False
+            obj_lang = LanguageKnownMaster.objects.filter(candidate=obj_cand).first()
+            obj_lang.candidate = obj_cand
+            obj_lang.language = lang_name
+            obj_lang.read = lang_read
+            obj_lang.write = lang_write
+            obj_lang.speak = lang_speak
+            obj_lang.save()
 
         if 'PHP' in request.POST:
+            tech_name = "PHP"
+            tech_rating = 0
             php = request.POST['PHPradio']
             if php == "begginer":
-                profile.technology = 'PHP'
-                profile.ranting = 3
-
+                tech_rating = 3
             elif php == "mediator":
-                profile.technology = 'PHP'
-                profile.ranting = 6
-
+                tech_rating = 6
             elif php == "expert":
-                profile.technology = 'PHP'
-                profile.ranting = 10
+                tech_rating = 10
 
-            else:
-                profile.technology = 'PHP'
-                profile.ranting = 3
+            obj_tech = TechnologyKnownMaster.objects.filter(candidate=obj_cand).first()
+            obj_tech.candidate = obj_cand
+            obj_tech.technology = tech_name
+            obj_tech.ranting = tech_rating
+            obj_tech.save()
+
+
 
         if 'Laravel' in request.POST:
-            laravel = request.POST['Laravelradio']
-            if laravel == "begginer":
-                profile.technology = 'Laravel'
-                profile.ranting = 3
+            tech_name = "Laravel"
+            tech_rating = 0
+            Laravel = request.POST['Laravelradio']
+            if Laravel == "begginer":
+                tech_rating = 3
+            elif Laravel == "mediator":
+                tech_rating = 6
+            elif Laravel == "expert":
+                tech_rating = 10
 
-            elif laravel == "mediator":
-                profile.technology = 'Laravel'
-                profile.ranting = 6
-
-            elif laravel == "expert":
-                profile.technology = 'Laravel'
-                profile.ranting = 10
-
-            else:
-                profile.technology = 'Laravel'
-                profile.ranting = 3
+            obj_tech = TechnologyKnownMaster.objects.filter(candidate=obj_cand).first()
+            obj_tech.candidate = obj_cand
+            obj_tech.technology = tech_name
+            obj_tech.ranting = tech_rating
+            obj_tech.save()
 
         if 'Mysql' in request.POST:
-            mysql = request.POST['Mysql']
-            if mysql == "begginer":
-                profile.technology = 'Mysql'
-                profile.ranting = 3
+            tech_name = "Mysql"
+            tech_rating = 0
+            Mysql = request.POST['Mysqlradio']
+            if Mysql == "begginer":
+                tech_rating = 3
+            elif Mysql == "mediator":
+                tech_rating = 6
+            elif Mysql == "expert":
+                tech_rating = 10
 
-            elif mysql == "mediator":
-                profile.technology = 'Mysql'
-                profile.ranting = 6
-
-            elif mysql == "expert":
-                profile.technology = 'Mysql'
-                profile.ranting = 10
-
-            else:
-                profile.technology = 'Mysql'
-                profile.ranting = 3
+            obj_tech = TechnologyKnownMaster.objects.filter(candidate=obj_cand).first()
+            obj_tech.candidate = obj_cand
+            obj_tech.technology = tech_name
+            obj_tech.ranting = tech_rating
+            obj_tech.save()
 
         if 'Oracle' in request.POST:
-            oracle = request.POST['Oracle']
-            if oracle == "begginer":
-                profile.technology = 'Oracle'
-                profile.ranting = 3
+            tech_name = "Oracle"
+            tech_rating = 0
+            Oracle = request.POST['Oracleradio']
+            if Oracle == "begginer":
+                tech_rating = 3
+            elif Oracle == "mediator":
+                tech_rating = 6
+            elif Oracle == "expert":
+                tech_rating = 10
 
-            elif oracle == "mediator":
-                profile.technology = 'Oracle'
-                profile.ranting = 6
+            obj_tech = TechnologyKnownMaster.objects.filter(candidate=obj_cand).first()
+            obj_tech.candidate = obj_cand
+            obj_tech.technology = tech_name
+            obj_tech.ranting = tech_rating
+            obj_tech.save()
 
-            elif oracle == "expert":
-                profile.technology = 'Oracle'
-                profile.ranting = 10
 
-            else:
-                profile.technology = 'Oracle'
-                profile.ranting = 3
-        profile.save()
+        for i in range(len(request.POST.getlist("refe_name"))):
+            obj_refe = AcademicMaster.objects.filter(candidate=obj_cand).first()
+            obj_refe.candidate = obj_cand
+            obj_refe.refe_name = request.POST.getlist("refe_name")[i]
+            obj_refe.refe_contact_no= request.POST.getlist("refe_contact_no")[i]
+            obj_refe.refe_relation= request.POST.getlist("refe_relation")[i]
+            obj_refe.save()
+
 
         return HttpResponseRedirect("/job/list/")
 
     context["form"] = form
-    context["form_acade"] = form_acade
-    context["form_exper"] = form_exper
-    context["form_langu"] = form_langu
-    context["form_techn"] = form_techn
-    context["form_refer"] = form_refer
+    context["obj_acad_first"] = obj_acad_first
+    context["obj_acad"]=obj_acad
+    context["obj_expe_first"] = obj_expe_first
+    context["obj_expe"] = obj_expe
+    context["obj_lang"] = obj_lang
+    context["obj_tech"] = obj_tech
+    context["obj_refe_first"] = obj_refe_first
+    context["obj_refe"] = obj_refe
     context["form_prefe"] = form_prefe
     context["data"] = ["Hindi", "Gujrati", "English"]
-    context["lang_selected"] = obj_lang.language
-    context["tech_selected"] = obj_tech.technology
-    context["rating"] =obj_tech.ranting
-    context["readed"] = obj_lang.read
-    context["writed"] = obj_lang.write
-    context["speaked"] = obj_lang.speak
     context["tech"] = ["PHP", "Laravel", "Mysql", "Oracle"]
     context["lang_rws"] = ['read', 'write', 'speak']
 

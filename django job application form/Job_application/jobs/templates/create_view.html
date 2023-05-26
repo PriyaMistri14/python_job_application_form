@@ -15,11 +15,38 @@
         <br><hr>
         <br>
 
-        <div name="acade_container">
+<!--        <div name="acade_container">-->
 
-        {{form_acade.as_p}}
+<!--        {{form_acade.as_p}}-->
 
-            </div>
+<!--            </div>-->
+        <div id="academic_form">
+
+
+             <p><label for="id_course_name">Course name:</label><select name="course_name" required id="id_course_name">
+            <option value="SSC">SSC</option>
+            <option value="HSC">HSC</option>
+            <option value="BECHELOR" >BECHELOR</option>
+            <option value="MASTER">MASTER</option>
+        </select></p>
+
+            <p><label for="id_name_of_board_university">Name of board university:</label>
+            <input type="text" name="name_of_board_university"  maxlength="30" required id="id_name_of_board_university" /></p>
+            <p><label for="id_passing_year">Passing year:</label>
+            <input type="number" name="passing_year"  required id="id_passing_year" /></p>
+            <p><label for="id_percentage">Percentage:</label>
+            <input type="number" name="percentage" required id="id_percentage" /></p>
+
+
+
+
+        </div>
+
+
+
+
+
+
         <div id="academic_id"></div>
 <!--        <div id="experiencesContainer"></div>-->
 
@@ -29,7 +56,24 @@
         <br><hr>
         <br>
 
-        {{form_exper.as_p}}
+        <div id="experience_form">
+            <p><label for="id_company_name">Company name:</label>
+            <input type="text" name="company_name" maxlength="50" required id="id_company_name" /></p>
+              <p><label for="id_designation">Designation:</label>
+    <input type="text" name="designation"  maxlength="50" required id="id_designation" /></p>
+<p><label for="id_from_date">From date:</label>
+            <input type="date" name="from_date"  required id="id_from_date" /></p>
+
+            <p><label for="id_to_date">To date:</label>
+            <input type="date" name="to_date"  required id="id_to_date" /></p>
+
+        </div>
+
+
+
+
+
+<!--        {{form_exper.as_p}}-->
         <div id="experience_id"></div>
         <p onclick="add_exper()" align="center">+</p>
         <p onclick="remove_exper()" align="center">-</p>
@@ -97,7 +141,22 @@
          <br><hr>
         <br>
 
-        {{form_refer.as_p}}
+        <div id="reference_form">
+
+            <p><label for="id_refe_name">Refe name:</label>
+            <input type="text" name="refe_name" maxlength="50" required id="id_refe_name" /></p>
+<p><label for="id_refe_contact_no">Refe contact no:</label>
+            <input type="text" name="refe_contact_no"  maxlength="10" required id="id_refe_contact_no" /></p>
+<p><label for="id_refe_relation">Refe relation:</label>
+            <input type="text" name="refe_relation"  maxlength="30" required id="id_refe_relation" /></p>
+
+
+
+
+
+        </div>
+
+
         <div id="reference_id"></div>
         <p onclick="add_refer()" align="center">+</p>
         <p onclick="remove_refer()" align="center">-</p>
@@ -123,7 +182,15 @@
     function add_acade(){
     var abc = document.getElementById("academic_id")
     var ele = document.createElement("div")
-    ele.innerHTML= `{{ form_acade.as_p }}`
+    ele.innerHTML= `<p><label for="id_course_name">Course name:</label><select name="course_name" required >
+            <option value="SSC">SSC</option><option value="HSC">HSC</option><option value="BECHELOR" >BECHELOR</option><option value="MASTER">MASTER</option>
+        </select></p><p><label for="id_name_of_board_university">Name of board university:</label>
+            <input type="text" name="name_of_board_university"  maxlength="30" required  /></p>
+            <p><label for="id_passing_year">Passing year:</label>
+            <input type="number" name="passing_year"  required  /></p>
+            <p><label for="id_percentage">Percentage:</label>
+            <input type="number" name="percentage" required  /></p>`
+
     abc.appendChild(ele)
 
     }
@@ -131,14 +198,26 @@
    function add_exper(){
     var abc = document.getElementById("experience_id")
      var ele = document.createElement("div")
-    ele.innerHTML= `{{ form_exper.as_p }}`
+    ele.innerHTML= `<p><label for="id_company_name">Company name:</label>
+            <input type="text" name="company_name" maxlength="50" required /></p>
+              <p><label for="id_designation">Designation:</label>
+    <input type="text" name="designation"  maxlength="50" required  /></p>
+<p><label for="id_from_date">From date:</label>
+            <input type="date" name="from_date"  required /></p>
+            <p><label for="id_to_date">To date:</label>
+            <input type="date" name="to_date"  required  /></p>`
     abc.appendChild(ele)
     }
 
 function add_refer(){
     var abc = document.getElementById("reference_id")
     var ele = document.createElement("div")
-    ele.innerHTML= `{{ form_refer.as_p }}`
+    ele.innerHTML= `<p><label for="id_refe_name">Refe name:</label>
+            <input type="text" name="refe_name" maxlength="50" required/></p>
+<p><label for="id_refe_contact_no">Refe contact no:</label>
+            <input type="text" name="refe_contact_no"  maxlength="10" required /></p>
+<p><label for="id_refe_relation">Refe relation:</label>
+            <input type="text" name="refe_relation"  maxlength="30" required/></p>`
     abc.appendChild(ele)
 
     }

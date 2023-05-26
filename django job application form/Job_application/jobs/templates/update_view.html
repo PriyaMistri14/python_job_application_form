@@ -20,12 +20,101 @@
         <br><hr>
         <br>
 
-        <div name="acade_container">
+        <div id="academic_form">
+                     <p><label>Course name:</label><select name="course_name" value={{ obj_acad_first.course_name }} required >
+           {% if obj_acad_first.course_name  == 'SSC' %}
 
-        {{form_acade.as_p}}
+                         <option value="SSC" selected>SSC</option>
+                         <option value="HSC" >HSC</option>
+                          <option value="BECHELOR">BECHELOR</option>
+                         <option value="MASTER" >MASTER</option>
+            {% endif %}
+
+
+                         {% if obj_acad_first.course_name == 'HSC' %}
+
+
+                         <option value="SSC" >SSC</option>
+                        <option value="HSC" selected>HSC</option>
+                         <option value="BECHELOR">BECHELOR</option>
+                         <option value="MASTER" >MASTER</option>
+                         {% endif %}
+
+                          {% if  obj_acad_first.course_name  == 'BECHELOR' %}
+                                    <option value="SSC" >SSC</option>
+                                    <option value="HSC">HSC</option>
+                                    <option value="BECHELOR" selected>BECHELOR</option>
+                                    <option value="MASTER" >MASTER</option>
+
+                         {% endif %}
+                          {% if  obj_acad_first.course_name == 'MASTER' %}
+
+
+                                    <option value="SSC" >SSC</option>
+                                    <option value="HSC">HSC</option>
+                                    <option value="BECHELOR" selected>BECHELOR</option>
+                                    <option value="MASTER" selected>MASTER</option>
+                         {% endif %}
+        </select></p>
+
+            <p><label >Name of board university:</label>
+            <input type="text" name="name_of_board_university"  value={{ obj_acad_first.name_of_board_university }} maxlength="30" required /></p>
+            <p><label>Passing year:</label>
+            <input type="number" name="passing_year" value={{ obj_acad_first.passing_year }}  required  /></p>
+            <p><label>Percentage:</label>
+            <input type="number" name="percentage" value={{ obj_acad_first.percentage }} required  /></p>
+
 
             </div>
-        <div id="academic_id"></div>
+
+        <div id="academic_id">
+
+         {% for obj_acad in obj_acad  %}
+
+        <div>
+             <p><label>Course name:</label><select name="course_name" value={{ obj_acad.course_name }} >
+              {% if obj_acad.course_name == 'SSC' %}
+
+                        <option value="SSC" selected="selected">SSC</option>
+                         <option value="HSC" >HSC</option>
+                          <option value="BECHELOR">BECHELOR</option>
+                         <option value="MASTER" >MASTER</option>
+            {% endif %}
+                         {% if obj_acad.course_name  == 'HSC' %}
+                       <option value="SSC" >SSC</option>
+                        <option value="HSC" selected="selected">HSC</option>
+                         <option value="BECHELOR">BECHELOR</option>
+                         <option value="MASTER" >MASTER</option>
+                         {% endif %}
+                          {% if obj_acad.course_name == 'BECHELOR' %}
+                                    <option value="SSC" >SSC</option>
+                                    <option value="HSC">HSC</option>
+                                    <option value="BECHELOR" selected>BECHELOR</option>
+                                    <option value="MASTER" >MASTER</option>
+                         {% endif %}
+                          {% if obj_acad.course_name  == 'MASTER' %}
+             <option value="SSC" >SSC</option>
+                                    <option value="HSC">HSC</option>
+                                    <option value="BECHELOR" selected>BECHELOR</option>
+                                    <option value="MASTER" selected>MASTER</option>
+                         {% endif %}
+        </select></p>
+
+            <p><label >Name of board university:</label>
+            <input type="text" name="name_of_board_university"  value={{ obj_acad.name_of_board_university }} maxlength="30"/></p>
+            <p><label >Passing year:</label>
+            <input type="number" name="passing_year" value={{ obj_acad.passing_year }} /></p>
+            <p><label >Percentage:</label>
+            <input type="number" name="percentage" value={{ obj_acad.percentage }} /></p>
+
+</div>
+
+
+            {% endfor %}
+            </div>
+
+
+
 <!--        <div id="experiencesContainer"></div>-->
 
         <p onclick="add_acade()" align="center">+</p>
@@ -34,8 +123,40 @@
         <br><hr>
         <br>
 
-        {{form_exper.as_p}}
-        <div id="experience_id"></div>
+        <div id="experience_form">
+            <p><label>Company name:</label>
+            <input type="text" name="company_name" value={{ obj_expe_first.company_name }} maxlength="50" required  /></p>
+              <p><label>Designation:</label>
+    <input type="text" name="designation" value={{ obj_expe_first.designation }}  maxlength="50" required  /></p>
+<p><label>From date:</label>
+            <input type="date" name="from_date" value={{obj_expe_first.from_date|date:'Y-m-d'}} required /></p>
+
+            <p><label>To date:</label>
+            <input type="date" name="to_date" value={{obj_expe_first.to_date|date:'Y-m-d'}} required  /></p>
+
+        </div>
+
+
+        <div id="experience_id">
+            {% for obj_expe in obj_expe %}
+            <div>
+
+                <p><label>Company name:</label>
+            <input type="text" name="company_name"  value={{ obj_expe.company_name }} maxlength="50"  /></p>
+              <p><label>Designation:</label>
+    <input type="text" name="designation" value={{ obj_expe.designation }} maxlength="50" /></p>
+<p><label>From date:</label>
+            <input type="date" name="from_date" value={{obj_expe.from_date|date:'Y-m-d'}} /></p>
+
+            <p><label>To date:</label>
+            <input type="date" name="to_date" value={{obj_expe.to_date|date:'Y-m-d'}} /></p>
+
+            </div>
+
+
+            {% endfor %}
+
+        </div>
         <p onclick="add_exper()" align="center">+</p>
         <p onclick="remove_exper()" align="center">-</p>
 
@@ -51,14 +172,17 @@
 <!--        {{form_langu.as_p}}-->
 
 
+
+        {% for obj_lang in obj_lang  %}
         {% for i in data %}
     <div class="row" style="display:flex;justify-content:center">
         <span>{{ i }}:  </span>
-        {% if i == lang_selected %}
+        {% if i == obj_lang.language %}
         <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change(`{{ i }}`)" checked></span>
 
-        {% endif %}
- {% if i != lang_selected %}
+
+
+ {% elif i != obj_lang.language %}
         <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change(`{{ i }}`)" ></span>
 {% endif %}
 
@@ -67,23 +191,43 @@
 
         <div style="display:flex;flex-direction:row;justify-content:center">
             {% for f in lang_rws %}
-            {% if readed == True and f == 'read' and i == lang_selected%}
-            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked disabled>
+            {% if obj_lang.read == True and f == 'read' and i == obj_lang.language%}
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked >
 
             {% endif %}
-             {% if writed == True and f == 'write' and i == lang_selected%}
-            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked disabled>
+             {% if obj_lang.write == True and f == 'write' and i == obj_lang.language%}
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked >
 
             {% endif %}
-             {% if speaked == True and f == 'speak' and i == lang_selected%}
-            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked disabled>
+             {% if obj_lang.speak == True and f == 'speak' and i == obj_lang.language%}
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} checked >
 
             {% endif %}
 
+            {% if i == obj_lang.language and obj_lang.read == False and f == "read"  %}
 
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} >
 
+            {% endif %}
+
+            {% if i == obj_lang.language and obj_lang.write == False and f == "write"  %}
+
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} >
+
+            {% endif %}
+
+            {% if i == obj_lang.language and obj_lang.speak == False and f == "speak"  %}
+
+            {{ f }}: <input type="checkbox" name={{ i }}{{ f }} >
+
+            {% endif %}
+
+            {% if i != obj_lang.language %}
 
             {{ f }}: <input type="checkbox" name={{ i }}{{ f }} disabled>
+
+            {% endif %}
+
             {% endfor %}
 
 <!--            {{form_langu.as_p}}-->
@@ -91,44 +235,50 @@
         </div>
     </div>
 {% endfor %}
+        {% endfor %}
 
 <!--        ........              -->
 
+
+
+
          <br><hr>
         <br>
+
+        {% for obj_tech in obj_tech %}
          {% for i in tech %}
     <div class="row" style="display:flex;justify-content:center">
         <span>{{ i }}:  </span>
-        {% if i == tech_selected %}
+        {% if i == obj_tech.technology %}
         <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change_tech(`{{ i }}`)" checked></span>
 
         {% endif %}
-        {% if i != tech_selected %}
+        {% if i != obj_tech.technology %}
         <span><input type="checkbox" value= {{ i }} name= {{ i }} onchange="change_tech(`{{ i }}`)"></span>
 {% endif %}
-        {% if rating == 3 and i == tech_selected %}
+        {% if obj_tech.ranting == 3 and i == obj_tech.technology %}
 
-        Begginer <input type="radio" name={{ i }}radio value="begginer" disabled checked>
-        Mediator <input type="radio" name={{ i }}radio value="mediator" disabled>
-        Expert <input type="radio" name={{ i }}radio value="expert" disabled>
+        Begginer <input type="radio" name={{ i }}radio value="begginer" checked>
+        Mediator <input type="radio" name={{ i }}radio value="mediator" >
+        Expert <input type="radio" name={{ i }}radio value="expert" >
 {% endif %}
 
-                {% if rating == 6 and i == tech_selected %}
+                {% if obj_tech.ranting == 6 and i == obj_tech.technology %}
 
-        Begginer <input type="radio" name={{ i }}radio value="begginer" disabled >
-        Mediator <input type="radio" name={{ i }}radio value="mediator" disabled checked>
-        Expert <input type="radio" name={{ i }}radio value="expert" disabled>
+        Begginer <input type="radio" name={{ i }}radio value="begginer" >
+        Mediator <input type="radio" name={{ i }}radio value="mediator" checked>
+        Expert <input type="radio" name={{ i }}radio value="expert" >
 {% endif %}
 
-                {% if rating == 10 and i == tech_selected %}
+                {% if obj_tech.ranting == 10 and i == obj_tech.technology %}
 
-        Begginer <input type="radio" name={{ i }}radio value="begginer" disabled >
-        Mediator <input type="radio" name={{ i }}radio value="mediator" disabled>
-        Expert <input type="radio" name={{ i }}radio value="expert" disabled checked>
+        Begginer <input type="radio" name={{ i }}radio value="begginer" >
+        Mediator <input type="radio" name={{ i }}radio value="mediator">
+        Expert <input type="radio" name={{ i }}radio value="expert" checked>
 {% endif %}
 
 
-        {% if i != tech_selected%}
+        {% if i != obj_tech.technology%}
 
           Begginer <input type="radio" name={{ i }}radio value="begginer" disabled >
         Mediator <input type="radio" name={{ i }}radio value="mediator" disabled>
@@ -146,6 +296,7 @@
 
     </div>
 {% endfor %}
+        {% endfor %}
 
 
 
@@ -157,8 +308,39 @@
          <br><hr>
         <br>
 
-        {{form_refer.as_p}}
-        <div id="reference_id"></div>
+        <div id="reference_form">
+
+            <p><label>Refe name:</label>
+            <input type="text" name="refe_name" value={{ obj_refe_first.refe_name }} maxlength="50" required /></p>
+<p><label>Refe contact no:</label>
+            <input type="text" name="refe_contact_no"  value={{ obj_refe_first.refe_contact_no }} maxlength="10" required /></p>
+<p><label>Refe relation:</label>
+            <input type="text" name="refe_relation"  value={{ obj_refe_first.refe_relation }} maxlength="30" required  /></p>
+        </div>
+
+
+        <div id="reference_id">
+            {% for obj_refe in obj_refe %}
+            <div>
+                 <p><label>Refe name:</label>
+            <input type="text" name="refe_name" value={{ obj_refe.refe_name }} maxlength="50"  /></p>
+<p><label>Refe contact no:</label>
+            <input type="text" name="refe_contact_no"  value={{ obj_refe.refe_contact_no }} maxlength="10" /></p>
+<p><label>Refe relation:</label>
+            <input type="text" name="refe_relation"  value={{ obj_refe.refe_relation }} maxlength="30"  /></p>
+
+
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+
+
+        </div>
         <p onclick="add_refer()" align="center">+</p>
         <p onclick="remove_refer()" align="center">-</p>
 
@@ -183,7 +365,19 @@
     function add_acade(){
     var abc = document.getElementById("academic_id")
     var ele = document.createElement("div")
-    ele.innerHTML= `{{ form_acade.as_p }}`
+    ele.innerHTML= `<p><label>Course name:</label><select name="course_name" required >
+            <option value="SSC">SSC</option>
+            <option value="HSC">HSC</option>
+            <option value="BECHELOR" >BECHELOR</option>
+            <option value="MASTER">MASTER</option>
+        </select></p>
+
+            <p><label >Name of board university:</label>
+            <input type="text" name="name_of_board_university" maxlength="30" required /></p>
+            <p><label>Passing year:</label>
+            <input type="number" name="passing_year"  required  /></p>
+            <p><label>Percentage:</label>
+            <input type="number" name="percentage" required  /></p>`
     abc.appendChild(ele)
 
     }
@@ -191,14 +385,27 @@
    function add_exper(){
     var abc = document.getElementById("experience_id")
      var ele = document.createElement("div")
-    ele.innerHTML= `{{ form_exper.as_p }}`
+    ele.innerHTML= `<p><label>Company name:</label>
+            <input type="text" name="company_name" maxlength="50"  /></p>
+              <p><label>Designation:</label>
+    <input type="text" name="designation" maxlength="50" /></p>
+<p><label>From date:</label>
+            <input type="date" name="from_date"  /></p>
+
+            <p><label>To date:</label>
+            <input type="date" name="to_date"  /></p>`
     abc.appendChild(ele)
     }
 
 function add_refer(){
     var abc = document.getElementById("reference_id")
     var ele = document.createElement("div")
-    ele.innerHTML= `{{ form_refer.as_p }}`
+    ele.innerHTML= `<p><label>Refe name:</label>
+            <input type="text" name="refe_name"  maxlength="50"  /></p>
+<p><label>Refe contact no:</label>
+            <input type="text" name="refe_contact_no" maxlength="10" /></p>
+<p><label>Refe relation:</label>
+            <input type="text" name="refe_relation"  maxlength="30"  /></p>`
     abc.appendChild(ele)
 
     }
@@ -254,11 +461,17 @@ function add_refer(){
    }
 
    else{
-   var name = lang_name+"rws"
-   var rws = document.getElementsByName(name)
-   for(i=0; i<rws.length ; i++){
-   rws[i].disabled = true
-   }
+   var name_read = lang_name+"read"
+   var name_write = lang_name+"write"
+   var name_speak = lang_name+"speak"
+
+   var read = document.getElementsByName(name_read)
+   read[0].disabled = true
+   var write = document.getElementsByName(name_write)
+   write[0].disabled = true
+   var speak = document.getElementsByName(name_speak)
+   speak[0].disabled = true
+
 
 
    }

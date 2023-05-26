@@ -9,6 +9,7 @@ from django.urls import path
 urlpatterns = [
     path('create/', views.create_view,name="create"),
     path('list/', views.list_view,name="list"),
+    path('pagination/', views.pagination_view,name="pagination"),
     path('delete/<id>/', views.delete_view,name="delete"),
     path('update/<id>/', views.update_view,name="update"),
     path('success/', views.success_view,name="create"),

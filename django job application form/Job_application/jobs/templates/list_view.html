@@ -5,16 +5,21 @@
     <title>List</title>
 </head>
 <body>
+<form method="GET">
+    {% csrf_token %}
+    <input type="text" name="search" placeholder="search here.....">
+    <input type="submit" value="search" name="submit">
+</form>
 <table border="1px" align="center">
-    <tr><td>FIRST NAME</td>
-        <td>LAST NAME</td>
-        <td>SURNAME</td>
-        <td>CONTACT NO</td>
-        <td>CITY</td>
-        <td>STATE</td>
-        <td>EMAIL</td>
-        <td>GENDER</td>
-        <td>DOB</td>
+    <tr><td><a href="?field=fname&sort={{sort}}">FIRST NAME</a></td>
+        <td><a href="?field=lname&sort={{sort}}">LAST NAME</a></td>
+        <td><a href="?field=surname&sort={{sort}}">SURNAME</a></td>
+        <td><a href="?field=contact_no&sort={{sort}}">CONTACT NO</a></td>
+        <td><a href="?field=city&sort={{sort}}">CITY</a></td>
+        <td><a href="?field=state&sort={{sort}}">STATE</a></td>
+        <td><a href="?field=email&sort={{sort}}">EMAIL</a></td>
+        <td><a href="?field=gender&sort={{sort}}">GENDER</a></td>
+        <td><a href="?field=dob&sort={{sort}}">DOB</a></td>
 
     </tr>
 {% for cand in cand  %}
@@ -36,6 +41,24 @@
 
 {% endfor %}
 
+
+<!--{% for lang in lang %}-->
+<!--    <tr><td>{{ lang.language }}</td><td>{{ lang.candidate.id }}</td></tr>-->
+<!--    <tr><td>{{ lang.read}}</td><td>{{ lang.write }}</td></tr>-->
+<!--    <tr><td>{{ lang.speak }}</td></tr>-->
+
+<!--{% endfor %}-->
+
+<!--{% for tech in tech %}-->
+<!--    <tr><td>{{ tech.candidate.id }}</td></tr>-->
+
+<!--    {% endfor %}-->
+
+
+<!--    {% for acad in acad %}-->
+<!--    <tr><td>{{ acad.candidate.id }}</td></tr>-->
+
+<!--    {% endfor %}-->
 
 
 
