@@ -229,7 +229,7 @@ function add_refer(){
    function change(lang_name){
    var language_name = document.getElementsByName(lang_name);
    if(language_name[0].checked){
-<!--   alert("condition is true")-->
+
    var name_read = lang_name+"read"
    var name_write = lang_name+"write"
    var name_speak = lang_name+"speak"
@@ -237,7 +237,7 @@ function add_refer(){
 
 
 
-<!--   alert(name)-->
+
 
    var read = document.getElementsByName(name_read)
    read[0].disabled = false
@@ -247,11 +247,6 @@ function add_refer(){
    speak[0].disabled = false
 
 
-
-<!--   for(i=0; i<rws.length ; i++){-->
-<!--   rws[i].disabled = false-->
-<!--   }-->
-<!--   alert(rws[0].disabled)-->
    }
 
    else{
@@ -265,7 +260,6 @@ function add_refer(){
    }
 
 
-<!--   alert(language_name[0].checked)-->
    }
 
 
@@ -274,15 +268,15 @@ function add_refer(){
  function change_tech(tech_name){
    var technology_name = document.getElementsByName(tech_name);
    if(technology_name[0].checked){
-<!--   alert("condition is true")-->
+
    var name = tech_name+"radio"
-<!--   alert(name)-->
+
 
    var rws = document.getElementsByName(name)
    for(i=0; i<rws.length ; i++){
    rws[i].disabled = false
    }
-<!--   alert(rws[0].disabled)-->
+
    }
 
    else{
@@ -296,7 +290,7 @@ function add_refer(){
    }
 
 
-<!--   alert(language_name[0].checked)-->
+
    }
 
 

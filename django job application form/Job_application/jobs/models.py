@@ -114,9 +114,9 @@ class ExperienceMaster(models.Model):
 class LanguageKnownMaster(models.Model):
     candidate = models.ForeignKey('CandidateMaster', on_delete=models.CASCADE)
     language= models.CharField(max_length=30,null=True,blank=True)
-    read = models.NullBooleanField(blank=True)
-    write = models.NullBooleanField(blank=True)
-    speak = models.NullBooleanField(blank=True)
+    read = models.BooleanField(blank=True,null=True)
+    write = models.BooleanField(blank=True,null=True)
+    speak = models.BooleanField(blank=True,null=True)
 
 
 
